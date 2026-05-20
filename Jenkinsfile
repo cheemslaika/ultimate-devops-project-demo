@@ -9,21 +9,9 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Docker Build Frontend') {
             steps {
-                echo 'Building application'
-            }
-        }
-
-        stage('Unit Test') {
-            steps {
-                echo 'Running unit tests'
-            }
-        }
-
-        stage('Package') {
-            steps {
-                echo 'Packaging application'
+                sh 'docker build -t frontend:v1 -f src/frontend/Dockerfile .'
             }
         }
     }
