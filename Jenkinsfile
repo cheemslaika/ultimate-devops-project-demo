@@ -3,15 +3,21 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                echo 'Checking out source code'
+                sh 'echo Building Application'
             }
         }
 
-        stage('Docker Build Frontend') {
+        stage('Test') {
             steps {
-                sh 'docker build -t frontend:v1 -f src/frontend/Dockerfile .'
+                sh 'echo Testing Application'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'echo Deploying Application'
             }
         }
     }
