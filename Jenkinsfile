@@ -1,53 +1,22 @@
-pipeline {
-    agent any
+stage('Docker Build') {
+    steps {
+        sh 'docker build -t cheemslaika/astronomy-shop:v1 -f src/frontend/Dockerfile .'
+    }
+}
 
-    stages {
+stage('Docker Push') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub-credentials',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )]) {
 
-        stage('Checkout') {
-            steps {
-                echo 'Checking out source code'
-            }
-        }
+            sh '''
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
-        stage('Build') {
-            steps {
-                sh 'echo Building application'
-            }
-        }
-
-        stage('Unit Test') {
-            steps {
-                sh 'echo Running tests'
-            }
-        }
-
-        stage('Package') {
-            steps {
-                sh 'echo Packaging application'
-            }
-        }
-
-        stage('Docker Build') {
-            steps {
-                sh 'docker build -t cheemslaika/astronomy-shop:v1 -f src/frontend/Dockerfile .'
-            }
-        }
-
-        stage('Docker Push') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-credentials',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-
-                    sh '''
-                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-
-                    docker push YOUR_DOCKERHUB_USERNAME/astronomy-shop:v1
-                    '''
-                }
-            }
+            docker push cheemslaika/astronomy-shop:v1
+            '''
         }
     }
 }
