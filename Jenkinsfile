@@ -17,13 +17,19 @@ pipeline {
 
         stage('Unit Test') {
             steps {
-                sh 'echo Running unit tests'
+                sh 'echo Running tests'
             }
         }
 
         stage('Package') {
             steps {
                 sh 'echo Packaging application'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t astronomy-shop:v1 -f src/frontend/Dockerfile .'
             }
         }
     }
